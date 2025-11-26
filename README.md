@@ -24,13 +24,15 @@ graph TB
         ALB["Application Load Balancer<br/>Multi-AZ<br/>Health checks cada 30s"]
 
         subgraph AZ1["AZ us-east-1b"]
-            Subnet1["Subnet 1<br/>CIDR: 192.168.16.16/28<br/>11 IPs disponibles"]
-            EC2_1["EC2 Instance 1<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
+            subgraph Subnet1["Subnet 1 - CIDR: 192.168.16.16/28"]
+                EC2_1["EC2 Instance 1<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
+            end
         end
 
         subgraph AZ2["AZ us-east-1c"]
-            Subnet2["Subnet 2<br/>CIDR: 192.168.16.32/28<br/>11 IPs disponibles"]
-            EC2_2["EC2 Instance 2<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
+            subgraph Subnet2["Subnet 2 - CIDR: 192.168.16.32/28"]
+                EC2_2["EC2 Instance 2<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
+            end
         end
 
         RDS["RDS MySQL 8.0<br/>db.t3.micro<br/>Encrypted + Backups<br/>Sin IP pública"]
@@ -39,10 +41,8 @@ graph TB
     Users -->|HTTP/HTTPS| IGW
     IGW --> RT
     RT --> ALB
-    ALB --> Subnet1
-    ALB --> Subnet2
-    Subnet1 --> EC2_1
-    Subnet2 --> EC2_2
+    ALB --> EC2_1
+    ALB --> EC2_2
     EC2_1 -->|MySQL:3306| RDS
     EC2_2 -->|MySQL:3306| RDS
 
