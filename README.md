@@ -14,27 +14,25 @@ Despliegue automático de WordPress en AWS usando Terraform.
 
 ```mermaid
 graph TB
-    Internet["Internet"]
-    Users["Usuarios Externos"]
-
-    Internet --> Users
+    Users["Usuarios Externos<br/>Internet"]
 
     subgraph VPC["VPC: vpc_itm_wordpress_dev | CIDR: 192.168.16.0/24"]
+        direction TB
+
         IGW["Internet Gateway"]
         RT["Route Table<br/>0.0.0.0/0 → IGW<br/>192.168.16.0/24 → local"]
+        ALB["Application Load Balancer<br/>Multi-AZ"]
 
-        subgraph AZ1["us-east-1b"]
+        subgraph AZ1["Availability Zone: us-east-1b"]
             Subnet1["Subnet 1<br/>192.168.16.16/28<br/>11 IPs disponibles"]
             EC2_1["EC2 Instance 1<br/>WordPress"]
         end
 
-        subgraph AZ2["us-east-1c"]
+        subgraph AZ2["Availability Zone: us-east-1c"]
             Subnet2["Subnet 2<br/>192.168.16.32/28<br/>11 IPs disponibles"]
             EC2_2["EC2 Instance 2<br/>WordPress"]
             RDS["RDS MySQL 8.0<br/>Sin IP Pública"]
         end
-
-        ALB["Application Load Balancer<br/>Multi-AZ"]
     end
 
     Users -->|HTTP/HTTPS| IGW
@@ -48,7 +46,6 @@ graph TB
     RT -.->|Asociada| Subnet1
     RT -.->|Asociada| Subnet2
 
-    style Internet fill:#1a1a1a,stroke:#000,stroke-width:2px,color:#fff
     style Users fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff
 
     style VPC fill:#ecf0f1,stroke:#34495e,stroke-width:4px,color:#000
@@ -66,14 +63,13 @@ graph TB
     style RDS fill:#27ae60,stroke:#1e8449,stroke-width:3px,color:#fff
     style ALB fill:#e74c3c,stroke:#c0392b,stroke-width:4px,color:#fff
 
-    linkStyle 0 stroke:#666,stroke-width:2px
-    linkStyle 1 stroke:#e74c3c,stroke-width:4px
-    linkStyle 2 stroke:#f39c12,stroke-width:3px
-    linkStyle 3 stroke:#e74c3c,stroke-width:4px
+    linkStyle 0 stroke:#e74c3c,stroke-width:4px
+    linkStyle 1 stroke:#f39c12,stroke-width:3px
+    linkStyle 2 stroke:#e74c3c,stroke-width:4px
+    linkStyle 3 stroke:#3498db,stroke-width:3px
     linkStyle 4 stroke:#3498db,stroke-width:3px
-    linkStyle 5 stroke:#3498db,stroke-width:3px
+    linkStyle 5 stroke:#27ae60,stroke-width:3px
     linkStyle 6 stroke:#27ae60,stroke-width:3px
-    linkStyle 7 stroke:#27ae60,stroke-width:3px
 ```
 
 **Componentes de la VPC**
