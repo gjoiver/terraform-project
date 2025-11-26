@@ -14,26 +14,26 @@ Despliegue automático de WordPress en AWS usando Terraform.
 
 ```mermaid
 graph TB
-    Users["Usuarios - Internet"]
+    Users["Usuarios Externos<br/>Internet"]
 
     subgraph VPC["VPC: vpc_itm_wordpress_dev | CIDR: 192.168.16.0/24"]
-        IGW["Internet Gateway"]
+        IGW["Internet Gateway<br/>Acceso público a internet"]
 
-        RT["Route Table"]
+        RT["Route Table<br/>0.0.0.0/0 → IGW<br/>192.168.16.0/24 → local"]
 
-        ALB["Application Load Balancer"]
+        ALB["Application Load Balancer<br/>Multi-AZ<br/>Health checks cada 30s"]
 
-        subgraph AZ1["AZ: us-east-1b"]
-            Subnet1["Subnet 1: 192.168.16.16/28"]
-            EC2_1["EC2 WordPress"]
+        subgraph AZ1["Availability Zone: us-east-1b"]
+            Subnet1["Subnet 1<br/>CIDR: 192.168.16.16/28<br/>11 IPs disponibles"]
+            EC2_1["EC2 Instance 1<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
         end
 
-        subgraph AZ2["AZ: us-east-1c"]
-            Subnet2["Subnet 2: 192.168.16.32/28"]
-            EC2_2["EC2 WordPress"]
+        subgraph AZ2["Availability Zone: us-east-1c"]
+            Subnet2["Subnet 2<br/>CIDR: 192.168.16.32/28<br/>11 IPs disponibles"]
+            EC2_2["EC2 Instance 2<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
         end
 
-        RDS["RDS MySQL 8.0"]
+        RDS["RDS MySQL 8.0<br/>db.t3.micro<br/>Encrypted + Backups<br/>Sin IP pública"]
     end
 
     Users -->|HTTP/HTTPS| IGW
@@ -43,8 +43,8 @@ graph TB
     ALB --> Subnet2
     Subnet1 --> EC2_1
     Subnet2 --> EC2_2
-    EC2_1 --> RDS
-    EC2_2 --> RDS
+    EC2_1 -->|MySQL:3306| RDS
+    EC2_2 -->|MySQL:3306| RDS
 
     style Users fill:#2C3E50,stroke:#1A252F,stroke-width:4px,color:#FFFFFF
 
