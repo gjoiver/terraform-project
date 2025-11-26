@@ -10,6 +10,88 @@ Despliegue automático de WordPress en AWS usando Terraform.
 - **Application Load Balancer** para distribuir tráfico
 - **Security Groups** configurados por capas
 
+## Diagrama de Arquitectura VPC
+
+```mermaid
+graph TB
+    Internet["Internet"]
+    Users["Usuarios Externos"]
+
+    Internet --> Users
+
+    subgraph VPC["VPC: vpc_itm_wordpress_dev | CIDR: 192.168.16.0/24"]
+        IGW["Internet Gateway"]
+        RT["Route Table<br/>0.0.0.0/0 → IGW<br/>192.168.16.0/24 → local"]
+
+        subgraph AZ1["us-east-1b"]
+            Subnet1["Subnet 1<br/>192.168.16.16/28<br/>11 IPs disponibles"]
+            EC2_1["EC2 Instance 1<br/>WordPress"]
+        end
+
+        subgraph AZ2["us-east-1c"]
+            Subnet2["Subnet 2<br/>192.168.16.32/28<br/>11 IPs disponibles"]
+            EC2_2["EC2 Instance 2<br/>WordPress"]
+            RDS["RDS MySQL 8.0<br/>Sin IP Pública"]
+        end
+
+        ALB["Application Load Balancer<br/>Multi-AZ"]
+    end
+
+    Users -->|HTTP/HTTPS| IGW
+    IGW --> RT
+    RT --> ALB
+    ALB -->|Distribuye| EC2_1
+    ALB -->|Distribuye| EC2_2
+    EC2_1 -->|MySQL:3306| RDS
+    EC2_2 -->|MySQL:3306| RDS
+
+    RT -.->|Asociada| Subnet1
+    RT -.->|Asociada| Subnet2
+
+    style Internet fill:#1a1a1a,stroke:#000,stroke-width:2px,color:#fff
+    style Users fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff
+
+    style VPC fill:#ecf0f1,stroke:#34495e,stroke-width:4px,color:#000
+    style IGW fill:#95a5a6,stroke:#7f8c8d,stroke-width:3px,color:#fff
+    style RT fill:#bdc3c7,stroke:#95a5a6,stroke-width:3px,color:#000
+
+    style AZ1 fill:#fff3cd,stroke:#f39c12,stroke-width:3px,color:#000
+    style AZ2 fill:#f8d7da,stroke:#e74c3c,stroke-width:3px,color:#000
+
+    style Subnet1 fill:#cce5ff,stroke:#3498db,stroke-width:3px,color:#000
+    style Subnet2 fill:#ffcccc,stroke:#e74c3c,stroke-width:3px,color:#000
+
+    style EC2_1 fill:#3498db,stroke:#2874a6,stroke-width:3px,color:#fff
+    style EC2_2 fill:#3498db,stroke:#2874a6,stroke-width:3px,color:#fff
+    style RDS fill:#27ae60,stroke:#1e8449,stroke-width:3px,color:#fff
+    style ALB fill:#e74c3c,stroke:#c0392b,stroke-width:4px,color:#fff
+
+    linkStyle 0 stroke:#666,stroke-width:2px
+    linkStyle 1 stroke:#e74c3c,stroke-width:4px
+    linkStyle 2 stroke:#f39c12,stroke-width:3px
+    linkStyle 3 stroke:#e74c3c,stroke-width:4px
+    linkStyle 4 stroke:#3498db,stroke-width:3px
+    linkStyle 5 stroke:#3498db,stroke-width:3px
+    linkStyle 6 stroke:#27ae60,stroke-width:3px
+    linkStyle 7 stroke:#27ae60,stroke-width:3px
+```
+
+**Componentes de la VPC**
+
+| Componente | Especificaciones |
+|------------|------------------|
+| VPC | vpc_itm_wordpress_dev - 192.168.16.0/24 |
+| Subnet 1 | us-east-1b - 192.168.16.16/28 (11 IPs) |
+| Subnet 2 | us-east-1c - 192.168.16.32/28 (11 IPs) |
+| Route Table | public_rt - Asociada a ambas subnets |
+| Internet Gateway | Adjunto a VPC para tráfico público |
+
+**Flujo de Tráfico**
+1. Usuarios → Internet Gateway
+2. IGW → Route Table → ALB
+3. ALB distribuye entre EC2-1 y EC2-2 (Multi-AZ)
+4. Instancias EC2 conectan a RDS vía MySQL:3306
+
 ## Requisitos
 
 1. Terraform instalado
