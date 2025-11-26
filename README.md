@@ -14,62 +14,68 @@ Despliegue automático de WordPress en AWS usando Terraform.
 
 ```mermaid
 graph TB
-    Users["Usuarios Externos<br/>Internet"]
+    Users["Usuarios Externos - Internet"]
 
-    subgraph VPC["VPC: vpc_itm_wordpress_dev | CIDR: 192.168.16.0/24"]
+    subgraph VPC["VPC: vpc_itm_wordpress_dev - CIDR: 192.168.16.0/24"]
         direction TB
 
+        VPC_Title[" "]
         IGW["Internet Gateway"]
         RT["Route Table<br/>0.0.0.0/0 → IGW<br/>192.168.16.0/24 → local"]
         ALB["Application Load Balancer<br/>Multi-AZ"]
 
         subgraph AZ1["Availability Zone: us-east-1b"]
-            Subnet1["Subnet 1<br/>192.168.16.16/28<br/>11 IPs disponibles"]
+            direction TB
+            Subnet1["Subnet 1<br/>192.168.16.16/28<br/>11 IPs"]
             EC2_1["EC2 Instance 1<br/>WordPress"]
         end
 
         subgraph AZ2["Availability Zone: us-east-1c"]
-            Subnet2["Subnet 2<br/>192.168.16.32/28<br/>11 IPs disponibles"]
+            direction TB
+            Subnet2["Subnet 2<br/>192.168.16.32/28<br/>11 IPs"]
             EC2_2["EC2 Instance 2<br/>WordPress"]
             RDS["RDS MySQL 8.0<br/>Sin IP Pública"]
         end
+
+        VPC_Title ~~~ IGW
     end
 
     Users -->|HTTP/HTTPS| IGW
     IGW --> RT
     RT --> ALB
-    ALB -->|Distribuye| EC2_1
-    ALB -->|Distribuye| EC2_2
+    ALB --> EC2_1
+    ALB --> EC2_2
     EC2_1 -->|MySQL:3306| RDS
     EC2_2 -->|MySQL:3306| RDS
 
     RT -.->|Asociada| Subnet1
     RT -.->|Asociada| Subnet2
 
-    style Users fill:#34495e,stroke:#2c3e50,stroke-width:3px,color:#fff
+    style Users fill:#2C3E50,stroke:#1A252F,stroke-width:4px,color:#FFFFFF
+    style VPC_Title fill:none,stroke:none,color:none
 
-    style VPC fill:#ecf0f1,stroke:#34495e,stroke-width:4px,color:#000
-    style IGW fill:#95a5a6,stroke:#7f8c8d,stroke-width:3px,color:#fff
-    style RT fill:#bdc3c7,stroke:#95a5a6,stroke-width:3px,color:#000
+    style VPC fill:#F8F9FA,stroke:#495057,stroke-width:5px,color:#212529
+    style IGW fill:#6C757D,stroke:#495057,stroke-width:4px,color:#FFFFFF
+    style RT fill:#ADB5BD,stroke:#6C757D,stroke-width:3px,color:#212529
 
-    style AZ1 fill:#fff3cd,stroke:#f39c12,stroke-width:3px,color:#000
-    style AZ2 fill:#f8d7da,stroke:#e74c3c,stroke-width:3px,color:#000
+    style AZ1 fill:#FFF3CD,stroke:#FFC107,stroke-width:4px,color:#212529
+    style AZ2 fill:#F8D7DA,stroke:#DC3545,stroke-width:4px,color:#212529
 
-    style Subnet1 fill:#cce5ff,stroke:#3498db,stroke-width:3px,color:#000
-    style Subnet2 fill:#ffcccc,stroke:#e74c3c,stroke-width:3px,color:#000
+    style Subnet1 fill:#D1ECF1,stroke:#0C5460,stroke-width:4px,color:#0C5460
+    style Subnet2 fill:#F5C6CB,stroke:#721C24,stroke-width:4px,color:#721C24
 
-    style EC2_1 fill:#3498db,stroke:#2874a6,stroke-width:3px,color:#fff
-    style EC2_2 fill:#3498db,stroke:#2874a6,stroke-width:3px,color:#fff
-    style RDS fill:#27ae60,stroke:#1e8449,stroke-width:3px,color:#fff
-    style ALB fill:#e74c3c,stroke:#c0392b,stroke-width:4px,color:#fff
+    style EC2_1 fill:#007BFF,stroke:#0056B3,stroke-width:4px,color:#FFFFFF
+    style EC2_2 fill:#007BFF,stroke:#0056B3,stroke-width:4px,color:#FFFFFF
+    style RDS fill:#28A745,stroke:#1E7E34,stroke-width:4px,color:#FFFFFF
+    style ALB fill:#DC3545,stroke:#BD2130,stroke-width:5px,color:#FFFFFF
 
-    linkStyle 0 stroke:#e74c3c,stroke-width:4px
-    linkStyle 1 stroke:#f39c12,stroke-width:3px
-    linkStyle 2 stroke:#e74c3c,stroke-width:4px
-    linkStyle 3 stroke:#3498db,stroke-width:3px
-    linkStyle 4 stroke:#3498db,stroke-width:3px
-    linkStyle 5 stroke:#27ae60,stroke-width:3px
-    linkStyle 6 stroke:#27ae60,stroke-width:3px
+    linkStyle 0 stroke:#DC3545,stroke-width:4px
+    linkStyle 1 stroke:#FFC107,stroke-width:3px
+    linkStyle 2 stroke:#DC3545,stroke-width:4px
+    linkStyle 3 stroke:#007BFF,stroke-width:3px
+    linkStyle 4 stroke:#007BFF,stroke-width:3px
+    linkStyle 5 stroke:#28A745,stroke-width:3px
+    linkStyle 6 stroke:#28A745,stroke-width:3px
 ```
 
 **Componentes de la VPC**
