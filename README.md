@@ -340,10 +340,10 @@ Mejoras que se podrían hacer:
 **v1.0.0 (2025)**
 Primera versión funcional con VPC, EC2 Auto Scaling, RDS MySQL y ALB.
 
-## Autor
+## Autores
 
-Joiver Andres Gonzalez Coronado
-Carlos Felipe Caro Arroyave
+- Joiver Andres Gonzalez Coronado
+- Carlos Felipe Caro Arroyave
 
 ## Soporte
 
