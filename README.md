@@ -14,49 +14,44 @@ Despliegue automático de WordPress en AWS usando Terraform.
 
 ```mermaid
 graph TB
-    Users["Usuarios Externos - Internet"]
+    Users["Usuarios - Internet"]
 
-    subgraph VPC["VPC: vpc_itm_wordpress_dev - CIDR: 192.168.16.0/24"]
-        direction TB
-
-        VPC_Title[" "]
+    subgraph VPC["VPC: vpc_itm_wordpress_dev | CIDR: 192.168.16.0/24"]
         IGW["Internet Gateway"]
-        RT["Route Table<br/>0.0.0.0/0 → IGW<br/>192.168.16.0/24 → local"]
-        ALB["Application Load Balancer<br/>Multi-AZ"]
 
-        subgraph AZ1["Availability Zone: us-east-1b"]
-            direction TB
-            Subnet1["Subnet 1<br/>192.168.16.16/28<br/>11 IPs"]
-            EC2_1["EC2 Instance 1<br/>WordPress"]
+        RT["Route Table"]
+
+        ALB["Application Load Balancer"]
+
+        subgraph AZ1["AZ: us-east-1b"]
+            Subnet1["Subnet 1: 192.168.16.16/28"]
+            EC2_1["EC2 WordPress"]
         end
 
-        subgraph AZ2["Availability Zone: us-east-1c"]
-            direction TB
-            Subnet2["Subnet 2<br/>192.168.16.32/28<br/>11 IPs"]
-            EC2_2["EC2 Instance 2<br/>WordPress"]
-            RDS["RDS MySQL 8.0<br/>Sin IP Pública"]
+        subgraph AZ2["AZ: us-east-1c"]
+            Subnet2["Subnet 2: 192.168.16.32/28"]
+            EC2_2["EC2 WordPress"]
         end
 
-        VPC_Title ~~~ IGW
+        RDS["RDS MySQL 8.0"]
     end
 
     Users -->|HTTP/HTTPS| IGW
     IGW --> RT
     RT --> ALB
-    ALB --> EC2_1
-    ALB --> EC2_2
-    EC2_1 -->|MySQL:3306| RDS
-    EC2_2 -->|MySQL:3306| RDS
-
-    RT -.->|Asociada| Subnet1
-    RT -.->|Asociada| Subnet2
+    ALB --> Subnet1
+    ALB --> Subnet2
+    Subnet1 --> EC2_1
+    Subnet2 --> EC2_2
+    EC2_1 --> RDS
+    EC2_2 --> RDS
 
     style Users fill:#2C3E50,stroke:#1A252F,stroke-width:4px,color:#FFFFFF
-    style VPC_Title fill:none,stroke:none,color:none
 
     style VPC fill:#F8F9FA,stroke:#495057,stroke-width:5px,color:#212529
     style IGW fill:#6C757D,stroke:#495057,stroke-width:4px,color:#FFFFFF
-    style RT fill:#ADB5BD,stroke:#6C757D,stroke-width:3px,color:#212529
+    style RT fill:#ADB5BD,stroke:#6C757D,stroke-width:4px,color:#212529
+    style ALB fill:#DC3545,stroke:#BD2130,stroke-width:5px,color:#FFFFFF
 
     style AZ1 fill:#FFF3CD,stroke:#FFC107,stroke-width:4px,color:#212529
     style AZ2 fill:#F8D7DA,stroke:#DC3545,stroke-width:4px,color:#212529
@@ -67,15 +62,6 @@ graph TB
     style EC2_1 fill:#007BFF,stroke:#0056B3,stroke-width:4px,color:#FFFFFF
     style EC2_2 fill:#007BFF,stroke:#0056B3,stroke-width:4px,color:#FFFFFF
     style RDS fill:#28A745,stroke:#1E7E34,stroke-width:4px,color:#FFFFFF
-    style ALB fill:#DC3545,stroke:#BD2130,stroke-width:5px,color:#FFFFFF
-
-    linkStyle 0 stroke:#DC3545,stroke-width:4px
-    linkStyle 1 stroke:#FFC107,stroke-width:3px
-    linkStyle 2 stroke:#DC3545,stroke-width:4px
-    linkStyle 3 stroke:#007BFF,stroke-width:3px
-    linkStyle 4 stroke:#007BFF,stroke-width:3px
-    linkStyle 5 stroke:#28A745,stroke-width:3px
-    linkStyle 6 stroke:#28A745,stroke-width:3px
 ```
 
 **Componentes de la VPC**
