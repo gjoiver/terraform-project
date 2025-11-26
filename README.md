@@ -23,12 +23,12 @@ graph TB
 
         ALB["Application Load Balancer<br/>Multi-AZ<br/>Health checks cada 30s"]
 
-        subgraph AZ1["Availability Zone: us-east-1b"]
+        subgraph AZ1["AZ us-east-1b"]
             Subnet1["Subnet 1<br/>CIDR: 192.168.16.16/28<br/>11 IPs disponibles"]
             EC2_1["EC2 Instance 1<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
         end
 
-        subgraph AZ2["Availability Zone: us-east-1c"]
+        subgraph AZ2["AZ us-east-1c"]
             Subnet2["Subnet 2<br/>CIDR: 192.168.16.32/28<br/>11 IPs disponibles"]
             EC2_2["EC2 Instance 2<br/>Amazon Linux 2023<br/>WordPress + Apache + PHP 8.2"]
         end
