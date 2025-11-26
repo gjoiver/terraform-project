@@ -46,22 +46,22 @@ graph TB
     EC2_1 -->|MySQL:3306| RDS
     EC2_2 -->|MySQL:3306| RDS
 
-    style Users fill:#2C3E50,stroke:#1A252F,stroke-width:4px,color:#FFFFFF
+    style Users fill:#34495E,stroke:#5DADE2,stroke-width:4px,color:#FFFFFF
 
-    style VPC fill:#F8F9FA,stroke:#495057,stroke-width:5px,color:#212529
-    style IGW fill:#6C757D,stroke:#495057,stroke-width:4px,color:#FFFFFF
-    style RT fill:#ADB5BD,stroke:#6C757D,stroke-width:4px,color:#212529
-    style ALB fill:#DC3545,stroke:#BD2130,stroke-width:5px,color:#FFFFFF
+    style VPC fill:#1C2833,stroke:#5DADE2,stroke-width:5px,color:#FFFFFF
+    style IGW fill:#566573,stroke:#85C1E9,stroke-width:4px,color:#FFFFFF
+    style RT fill:#717D7E,stroke:#85C1E9,stroke-width:4px,color:#FFFFFF
+    style ALB fill:#CB4335,stroke:#EC7063,stroke-width:5px,color:#FFFFFF
 
-    style AZ1 fill:#FFF3CD,stroke:#FFC107,stroke-width:4px,color:#212529
-    style AZ2 fill:#F8D7DA,stroke:#DC3545,stroke-width:4px,color:#212529
+    style AZ1 fill:#7D6608,stroke:#F4D03F,stroke-width:4px,color:#FFFFFF
+    style AZ2 fill:#78281F,stroke:#EC7063,stroke-width:4px,color:#FFFFFF
 
-    style Subnet1 fill:#D1ECF1,stroke:#0C5460,stroke-width:4px,color:#0C5460
-    style Subnet2 fill:#F5C6CB,stroke:#721C24,stroke-width:4px,color:#721C24
+    style Subnet1 fill:#1B4F72,stroke:#5DADE2,stroke-width:4px,color:#FFFFFF
+    style Subnet2 fill:#78281F,stroke:#EC7063,stroke-width:4px,color:#FFFFFF
 
-    style EC2_1 fill:#007BFF,stroke:#0056B3,stroke-width:4px,color:#FFFFFF
-    style EC2_2 fill:#007BFF,stroke:#0056B3,stroke-width:4px,color:#FFFFFF
-    style RDS fill:#28A745,stroke:#1E7E34,stroke-width:4px,color:#FFFFFF
+    style EC2_1 fill:#1F618D,stroke:#5DADE2,stroke-width:4px,color:#FFFFFF
+    style EC2_2 fill:#1F618D,stroke:#5DADE2,stroke-width:4px,color:#FFFFFF
+    style RDS fill:#186A3B,stroke:#52BE80,stroke-width:4px,color:#FFFFFF
 ```
 
 **Componentes de la VPC**
