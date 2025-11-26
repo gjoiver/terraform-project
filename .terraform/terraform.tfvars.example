@@ -1,0 +1,18 @@
+# AWS Configuration
+aws_region = "us-east-1"
+aws_profile = "default"
+shared_credentials_files = ["C:/Users/Usuario/.aws/credentials"]
+
+# Database Configuration
+db_name     = "wordpressdb"
+db_username = "admin"
+db_password = "YourSecurePassword123!"  # CHANGE THIS TO A SECURE PASSWORD
+
+# SSH Key Configuration
+# Make sure to create this key pair in AWS EC2 console first
+key_name = "wordpress-key"
+
+# Note: VPC, Subnet, EC2, and ALB names are configured per workspace in variables.tf
+# To use different workspaces:
+# terraform workspace new dev
+# terraform workspace select dev
